@@ -55,52 +55,51 @@ class GMM:
         self.tolerance = tolerance
 
     def fit(self, X):
-        # step 1 initialize
-        _initialize_parameters(X)
-        max_lower_bound = -np.infty
-        n_samples, _ = X.shape
+        # # step 1 initialize
+        # self._initialize_parameters(X)
+        # max_lower_bound = -np.infty
+        # n_samples, _ = X.shape
+        # lower_bound = (-np.infty if do_init else self.lower_bound_)
+        # for n_iter in range(1, self.max_iter + 1):
+            # self.prev_lower_bound = lower_bound
+        #     log_prob_norm, log_resp = self._e_step(X)
+        #     self._m_step(X, log_resp)
+        #     lower_bound = self._compute_lower_bound(
+        #         log_resp, log_prob_norm)
 
-        lower_bound = (-np.infty if do_init else self.lower_bound_)
+        #     change = lower_bound - prev_lower_bound
+        #     self._print_verbose_msg_iter_end(n_iter, change)
 
-        for n_iter in range(1, self.max_iter + 1):
-            prev_lower_bound = lower_bound
+        #     if abs(change) < self.tol:
+        #         self.converged_ = True
+        #         break
 
-            log_prob_norm, log_resp = self._e_step(X)
-            self._m_step(X, log_resp)
-            lower_bound = self._compute_lower_bound(
-                log_resp, log_prob_norm)
+        #     self._print_verbose_msg_init_end(lower_bound)
 
-            change = lower_bound - prev_lower_bound
-            self._print_verbose_msg_iter_end(n_iter, change)
+        #     if lower_bound > max_lower_bound:
+        #         max_lower_bound = lower_bound
+        #         best_params = self._get_parameters()
+        #         best_n_iter = n_iter
 
-            if abs(change) < self.tol:
-                self.converged_ = True
-                break
+        # if not self.converged_:
+        #     pass
+            # warnings.warn('Initialization %d did not converge. '
+            #             'Try different init parameters, '
+            #             'or increase max_iter, tol '
+            #             'or check for degenerate data.'
+            #             % (init + 1), ConvergenceWarning)
 
-            self._print_verbose_msg_init_end(lower_bound)
-
-            if lower_bound > max_lower_bound:
-                max_lower_bound = lower_bound
-                best_params = self._get_parameters()
-                best_n_iter = n_iter
-
-        if not self.converged_:
-            warnings.warn('Initialization %d did not converge. '
-                          'Try different init parameters, '
-                          'or increase max_iter, tol '
-                          'or check for degenerate data.'
-                           % (init + 1), ConvergenceWarning)
-
-        self._set_parameters(best_params)
-        self.n_iter_ = best_n_iter
-        self.lower_bound_ = max_lower_bound
+        # self._set_parameters(best_params)
+        # self.n_iter_ = best_n_iter
+        # self.lower_bound_ = max_lower_bound
 
         # Always do a final e-step to guarantee that the labels returned by
         # fit_predict(X) are always consistent with fit(X).predict(X)
         # for any value of max_iter and tol (and any random_state).
-        _, log_resp = self._e_step(X)
+        # _, log_resp = self._e_step(X)
 
-        return log_resp.argmax(axis=1)
+        # return log_resp.argmax(axis=1)
+        pass
 
     def _e_step(self, X):
         """E step.
