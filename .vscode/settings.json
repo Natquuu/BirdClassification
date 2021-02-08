@@ -1,3 +1,7 @@
 {
-   "html.format.wrapLineLength": 90
+   "html.format.wrapLineLength": 90,
+   "cSpell.words": [
+      "classificators",
+      "mfcc"
+   ]
 }
