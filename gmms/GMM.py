@@ -5,7 +5,8 @@ Created with love by Sigmoid
 
 # Importing the libraries
 import numpy as np
-import pandas as pd
+
+
 class GMM:
     def __init__(self, n_components, max_iter = 100, comp_names=None):
         '''

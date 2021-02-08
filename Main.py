@@ -3,7 +3,7 @@ import scipy as sp
 import python_speech_features as speech
 import signal_parametrization
 import time
-import GMM
+import gmms.GMM
 import sklearn.mixture._gaussian_mixture
 
 print("start")
