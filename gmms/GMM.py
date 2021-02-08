@@ -8,7 +8,7 @@ import numpy as np
 
 
 class GMM:
-    def __init__(self, n_components, max_iter = 100, comp_names=None):
+    def __init__(self, n_components, max_iter=100, comp_names=None):
         '''
                     This functions initializes the model by seting the following paramenters:
                         :param n_components: int
@@ -23,7 +23,8 @@ class GMM:
         self.n_componets = n_components
         self.max_iter = max_iter
         if comp_names == None:
-            self.comp_names = [f"comp{index}" for index in range(self.n_componets)]
+            self.comp_names = [
+                f"comp{index}" for index in range(self.n_componets)]
         else:
             self.comp_names = comp_names
         # pi list contains the fraction of the dataset for every cluster
@@ -44,7 +45,7 @@ class GMM:
         cos3 = np.linalg.det(covariance_matrix)**(0.5)
         cos2 = np.linalg.det(covariance_matrix)**(-0.5)
         return (2*np.pi)**(-len(X)/2)*np.linalg.det(covariance_matrix)**(-0.5)*np.exp(-np.dot(np.dot((X-mean_vector).T,
-                np.linalg.inv(covariance_matrix)), (X-mean_vector))/2)
+                                                                                                     np.linalg.inv(covariance_matrix)), (X-mean_vector))/2)
 
     def fit(self, X):
         '''
@@ -68,8 +69,10 @@ class GMM:
             # Calculating the r matrix
             for n in range(len(X)):
                 for k in range(self.n_componets):
-                    self.r[n][k] = self.pi[k] * self.multivariate_normal(X[n], self.mean_vector[k], self.covariance_matrixes[k])
-                    self.r[n][k] /= sum([self.pi[j]*self.multivariate_normal(X[n], self.mean_vector[j], self.covariance_matrixes[j]) for j in range(self.n_componets)])
+                    self.r[n][k] = self.pi[k] * self.multivariate_normal(
+                        X[n], self.mean_vector[k], self.covariance_matrixes[k])
+                    self.r[n][k] /= sum([self.pi[j]*self.multivariate_normal(
+                        X[n], self.mean_vector[j], self.covariance_matrixes[j]) for j in range(self.n_componets)])
             # Calculating the N
             N = np.sum(self.r, axis=0)
             ''' --------------------------   M - STEP   -------------------------- '''
@@ -79,15 +82,20 @@ class GMM:
             for k in range(self.n_componets):
                 for n in range(len(X)):
                     self.mean_vector[k] += self.r[n][k] * X[n]
-            self.mean_vector = [1/N[k]*self.mean_vector[k] for k in range(self.n_componets)]
+            self.mean_vector = [1/N[k]*self.mean_vector[k]
+                                for k in range(self.n_componets)]
             # Initiating the list of the covariance matrixes
-            self.covariance_matrixes = [np.zeros((len(X[0]), len(X[0]))) for k in range(self.n_componets)]
+            self.covariance_matrixes = [
+                np.zeros((len(X[0]), len(X[0]))) for k in range(self.n_componets)]
             # Updating the covariance matrices
             for k in range(self.n_componets):
-                self.covariance_matrixes[k] = np.cov(X.T, aweights=(self.r[:, k]), ddof=0)
-            self.covariance_matrixes = [1/N[k]*self.covariance_matrixes[k] for k in range(self.n_componets)]
+                self.covariance_matrixes[k] = np.cov(
+                    X.T, aweights=(self.r[:, k]), ddof=0)
+            self.covariance_matrixes = [
+                1/N[k]*self.covariance_matrixes[k] for k in range(self.n_componets)]
             # Updating the pi list
             self.pi = [N[k]/len(X) for k in range(self.n_componets)]
+
     def predict(self, X):
         '''
             The predicting function

@@ -61,7 +61,7 @@ class GMM:
         # n_samples, _ = X.shape
         # lower_bound = (-np.infty if do_init else self.lower_bound_)
         # for n_iter in range(1, self.max_iter + 1):
-            # self.prev_lower_bound = lower_bound
+        # self.prev_lower_bound = lower_bound
         #     log_prob_norm, log_resp = self._e_step(X)
         #     self._m_step(X, log_resp)
         #     lower_bound = self._compute_lower_bound(
@@ -83,11 +83,11 @@ class GMM:
 
         # if not self.converged_:
         #     pass
-            # warnings.warn('Initialization %d did not converge. '
-            #             'Try different init parameters, '
-            #             'or increase max_iter, tol '
-            #             'or check for degenerate data.'
-            #             % (init + 1), ConvergenceWarning)
+        # warnings.warn('Initialization %d did not converge. '
+        #             'Try different init parameters, '
+        #             'or increase max_iter, tol '
+        #             'or check for degenerate data.'
+        #             % (init + 1), ConvergenceWarning)
 
         # self._set_parameters(best_params)
         # self.n_iter_ = best_n_iter
@@ -154,7 +154,8 @@ class GMM:
         """
         n_samples, _ = X.shape
 
-        weights, means, covariances = self._estimate_gaussian_parameters(X, resp)
+        weights, means, covariances = self._estimate_gaussian_parameters(
+            X, resp)
         weights /= n_samples
 
         self.weights_ = weights

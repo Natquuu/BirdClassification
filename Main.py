@@ -8,7 +8,7 @@ print("start")
 wektoro = np.random.rand(50000)
 t = time.time()
 framed = signal_parametrization.framing(
-   wektoro, 16000, 0.025, 0.01, np.hamming)
+    wektoro, 16000, 0.025, 0.01, np.hamming)
 t1 = time.time() - t
 t = time.time()
 framed2 = speech.sigproc.framesig(wektoro, 400, 160, np.hamming)

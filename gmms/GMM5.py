@@ -10,11 +10,13 @@ def plot_distributions(data, data_sampled, mu, sigma, K, color="green", color_sa
     plt.rcParams.update({'font.size': 16})
     data_sampled = np.clip(data_sampled, np.min(data), np.max(data))
     plt.hist(data, bins=15, color=color, alpha=0.45, density=True)
-    plt.hist(data_sampled, bins=15, range=(np.min(data), np.max(data)), color=color_sampled, alpha=0.45, density=True)
+    plt.hist(data_sampled, bins=15, range=(np.min(data), np.max(data)),
+             color=color_sampled, alpha=0.45, density=True)
     for k in range(K):
         curve = np.linspace(mu[k] - 10 * sigma[k], mu[k] + 10 * sigma[k], 100)
         color = np.random.rand(3)
-        plt.plot(curve, stats.norm.pdf(curve, mu[k], sigma[k]), color=color, linestyle="--", linewidth=3)
+        plt.plot(curve, stats.norm.pdf(
+            curve, mu[k], sigma[k]), color=color, linestyle="--", linewidth=3)
     plt.ylabel(r"$p(x)$")
     plt.xlabel(r"$x$")
     plt.tight_layout()
@@ -26,7 +28,8 @@ def plot_distributions(data, data_sampled, mu, sigma, K, color="green", color_sa
 def plot_likelihood(nll_list):
     matplotlib.rcParams['text.usetex'] = True
     plt.rcParams.update({'font.size': 16})
-    plt.plot(np.arange(len(nll_list)), nll_list, color="black", linestyle="--", linewidth=3)
+    plt.plot(np.arange(len(nll_list)), nll_list,
+             color="black", linestyle="--", linewidth=3)
     plt.ylabel(r"(negative) log-likelihood")
     plt.xlabel(r"iteration")
     plt.tight_layout()
@@ -83,17 +86,21 @@ def main():
         # The NLL is invalid if NLL_t-1 < NLL_t
         # Note that this can happen for round-off errors.
         if (len(nll_list) >= 2):
-            if (nll_list[-2] < nll_list[-1]): raise Exception("[ERROR] invalid NLL: " + str(nll_list[-2:]))
+            if (nll_list[-2] < nll_list[-1]):
+                raise Exception("[ERROR] invalid NLL: " + str(nll_list[-2:]))
 
         print("Iteration: " + str(iteration) + "; NLL: " + str(nll_list[-1]))
-        print("Mean " + str(mu) + "\nStd " + str(sigma) + "\nWeights " + str(pi) + "\n")
+        print("Mean " + str(mu) + "\nStd " +
+              str(sigma) + "\nWeights " + str(pi) + "\n")
 
         # Step-4 (Check)
-        if (iteration == tot_iterations - 1): break  # check iteration
+        if (iteration == tot_iterations - 1):
+            break  # check iteration
 
     plot_likelihood(nll_list)
     data_gmm = sampler(pi, mu, sigma, N=1000)
-    plot_distributions(data, data_gmm, mu, sigma, K, color="green", color_sampled="red", name="plot_sampler.png")
+    plot_distributions(data, data_gmm, mu, sigma, K, color="green",
+                       color_sampled="red", name="plot_sampler.png")
 
 
 if __name__ == "__main__":
