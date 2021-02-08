@@ -37,9 +37,7 @@ def loadFiles(path):
 
 def main():
     path =  './data'
-    print("Path: %s" % path)
     recordings, samplerates = loadFiles(path)
-    print("recording length %d" % len(recordings))
 
     # Classification
     classificators = list()
@@ -65,7 +63,6 @@ def main():
     score = 0
     for testNumber in range(validation_length):
         currentRecordingNumber = testNumber % 2
-        print("current index: %d" % currentRecordingNumber)
         recording = recordings[currentRecordingNumber]
         currentMfcc = mfcc(recording,
                            samplerate=samplerates[currentRecordingNumber],
