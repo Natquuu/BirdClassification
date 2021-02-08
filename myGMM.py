@@ -154,8 +154,7 @@ class GMM:
         """
         n_samples, _ = X.shape
 
-        weights, means, covariances = self._estimate_gaussian_parameters(
-            X, resp)
+        weights, means, covariances = self._estimate_gaussian_parameters(X, resp)
         weights /= n_samples
 
         self.weights_ = weights
