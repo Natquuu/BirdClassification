@@ -1,23 +1,22 @@
+import scipy
 import matplotlib.pyplot as plt
 import random
 import numpy as np
 from scipy.stats import norm
 from sklearn.datasets import make_blobs
 
-#seed data for reconstruction
+# seed data for reconstruction
 np.random.seed(0)
 
-#create data
-X,Y = make_blobs(cluster_std=1.5,random_state=20,n_samples=500,centers=3)
+# create data
+X, Y = make_blobs(cluster_std=1.5, random_state=20, n_samples=500, centers=3)
 # strech data to ellipsoid
-X = np.dot(X,np.random.RandomState(0).randn(2,2))
+X = np.dot(X, np.random.RandomState(0).randn(2, 2))
 
 # plt.scatter(X[:, 0], X[:, 1], c='grey', s=30)
 # plt.axis('equal')
 # plt.show()
 
-
-import scipy
 
 def E_step(X, pi, mu, sigma):
     """
@@ -35,7 +34,8 @@ def E_step(X, pi, mu, sigma):
     d = mu.shape[1]  # dimension of each object
     gamma = np.zeros((N, C))  # distribution q(T)
     for i in range(C):
-        gamma[:, i] = pi[i] * scipy.stats.multivariate_normal(mean=mu[i], cov=sigma[i]).pdf(X)
+        gamma[:, i] = pi[i] * \
+            scipy.stats.multivariate_normal(mean=mu[i], cov=sigma[i]).pdf(X)
     for n in range(N):
         z = np.sum(gamma[n, :])
         gamma[n, :] = gamma[n, :] / (z)
@@ -43,6 +43,7 @@ def E_step(X, pi, mu, sigma):
     return gamma
 
 #gamma = E_step(X, pi0, mu0, sigma0)
+
 
 def M_step(X, gamma):
     """
@@ -59,7 +60,6 @@ def M_step(X, gamma):
     C = gamma.shape[1]  # number of clusters
     d = X.shape[1]  # dimension of each object
 
-
     mu = []
     sigma = []
     pi = []
@@ -68,7 +68,8 @@ def M_step(X, gamma):
         r_x = np.sum(X * gamma[:, i].reshape(len(X), 1), axis=0)
         r_i = sum(gamma[:, i])
         mu.append(r_x / r_i)
-        s = ((1 / r_i) * np.dot((np.array(gamma[:, i]).reshape(len(X), 1) * (X - mu[i])).T, (X - mu[i]))) + reg_cov
+        s = ((1 / r_i) * np.dot((np.array(gamma[:, i]).reshape(
+            len(X), 1) * (X - mu[i])).T, (X - mu[i]))) + reg_cov
         sigma.append(s)
         pi.append(r_i / np.sum(gamma))
     return np.array(pi), np.array(mu), np.array(sigma)
@@ -95,11 +96,12 @@ def compute_vlb(X, pi, mu, sigma, gamma):
 
     for i in range(X.shape[0]):
         for j in range(C):
-            Norm=scipy.stats.multivariate_normal(mean=mu[j], cov=sigma[j]).pdf(X)
-            if np.logical_and(np.isnan(Norm[i])==False,np.isinf(Norm[i])==False):
-                if Norm[i] >0:
+            Norm = scipy.stats.multivariate_normal(
+                mean=mu[j], cov=sigma[j]).pdf(X)
+            if np.logical_and(np.isnan(Norm[i]) == False, np.isinf(Norm[i]) == False):
+                if Norm[i] > 0:
                     L1.append(gamma[i, j] * (np.log(pi[j]) + np.log(Norm[i])))
-                if gamma[i, j]>0:
+                if gamma[i, j] > 0:
                     L2.append((gamma[i, j] * np.log(gamma[i, j])))
     L1 = np.array(L1)
     L2 = np.array(L2)
@@ -113,7 +115,7 @@ def compute_vlb(X, pi, mu, sigma, gamma):
 
 
 def create_mean():
-    mean=np.random.randint(min(X[:, 0]), max(X[:, 0]), size=(3, len(X[0])))
+    mean = np.random.randint(min(X[:, 0]), max(X[:, 0]), size=(3, len(X[0])))
     return mean
 
 
@@ -122,6 +124,7 @@ def create_sigma():
     sigma_1 = [I, I, I]
     sigma_1 = np.array(sigma_1)
     return sigma_1
+
 
 def create_pi():
     a = []
@@ -133,12 +136,13 @@ def create_pi():
         pi_1.append(a[x] / z)
     return np.array(pi_1)
 
-def Best_config(loses,pis0,mus0,sigmas0):
-    best_config=[]
+
+def Best_config(loses, pis0, mus0, sigmas0):
+    best_config = []
     for key, value in loses.items():
         max_val = max(list(loses.values()))
         if value == max_val:
-            return loses[key],pis0[key],mus0[key],sigmas0[key]
+            return loses[key], pis0[key], mus0[key], sigmas0[key]
 
 
 def train_EM(X, C, rtol=1e-3, max_iter=100, restarts=30):
@@ -158,41 +162,43 @@ def train_EM(X, C, rtol=1e-3, max_iter=100, restarts=30):
     pis = {}
     mus = {}
     sigmas = {}
-    losses={}
+    losses = {}
 
     for _ in range(restarts):
         try:
-            ### creating parameters
-            mu=create_mean()
-            sigma=create_sigma()
-            pi=create_pi()
+            # creating parameters
+            mu = create_mean()
+            sigma = create_sigma()
+            pi = create_pi()
 
-            ### The Functions
+            # The Functions
             Stop_point = False
-            loss=1
+            loss = 1
             for ind in range(max_iter):
-                if Stop_point ==False:
+                if Stop_point == False:
                     if np.logical_and(np.isnan(mu).any() == False, np.isinf(mu).any() == False):
                         if np.logical_and(np.isnan(sigma).any() == False, np.isinf(sigma).any() == False):
                             gamma = E_step(X, pi, mu, sigma)
                             pi, mu, sigma = M_step(X, gamma)
-                            if ind>0 and rtol >= np.abs((compute_vlb(X, pi, mu, sigma, gamma)-loss) / loss):
-                                Stop_point =True
+                            if ind > 0 and rtol >= np.abs((compute_vlb(X, pi, mu, sigma, gamma)-loss) / loss):
+                                Stop_point = True
                             else:
                                 loss = compute_vlb(X, pi, mu, sigma, gamma)
                 else:
                     break
-            losses[_]=loss
-            pis[_]=pi
-            mus[_]=mu
-            sigmas[_]=sigma
+            losses[_] = loss
+            pis[_] = pi
+            mus[_] = mu
+            sigmas[_] = sigma
 
         except Exception:
-                print("array must not contain infs or NaNs")
-                pass
-    best_loss, best_pi, best_mu, best_sigma=Best_config(losses,pis,mus,sigmas)
+            print("array must not contain infs or NaNs")
+            pass
+    best_loss, best_pi, best_mu, best_sigma = Best_config(
+        losses, pis, mus, sigmas)
 
     return best_loss, best_pi, best_mu, best_sigma
+
 
 best_loss, best_pi, best_mu, best_sigma = train_EM(X, 3)
 
