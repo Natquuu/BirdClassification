@@ -9,6 +9,7 @@ pandas==1.2.1
 Pillow==8.1.0
 pycodestyle==2.6.0
 pycparser==2.20
+pydub==0.24.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-speech-features==0.6
