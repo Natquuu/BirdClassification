@@ -2,8 +2,12 @@ import os
 import numpy as np
 import soundfile as sf
 
+from pydub import AudioSegment
+from pydub.playback import play
 from sklearn.mixture import GaussianMixture
 from python_speech_features import mfcc
+
+import matplotlib.pyplot as plt
 
 n_components = 12
 covariance_type = 'diag'
@@ -13,26 +17,26 @@ max_iter = 100
 validation_length = 100
 
 
-def flattenToMono(data):
-    output = np.copy(data)
-    if len(data.shape) == 2:
-        output = output[:, 0].flatten()
-    else:
-        output = output.flatten()
-    return output
+# def flattenToMono(data):
+#     output = np.copy(data)
+#     if len(data.shape) == 2:
+#         output = output[:, 0].flatten()
+#     else:
+#         output = output.flatten()
+#     return output
 
 
-def loadFiles(path):
-    outputData, outputSampleRates = list(), list()
-    for (directoryPath, directoryName, fileName) in os.walk(path):
-        for file in fileName:
-            if file.endswith('.wav'):
-                tempPath = os.getcwd() + '/' + os.path.join(directoryPath,
-                                                            file)
-                data, samplerate = sf.read(tempPath)
-                outputData.append(flattenToMono(data))
-                outputSampleRates.append(samplerate)
-    return outputData, outputSampleRates
+# def loadFiles(path):
+#     outputData, outputSampleRates = list(), list()
+#     for (directoryPath, directoryName, fileName) in os.walk(path):
+#         for file in fileName:
+#             if file.endswith('.wav'):
+#                 tempPath = os.getcwd() + '/' + os.path.join(directoryPath,
+#                                                             file)
+#                 data, samplerate = sf.read(tempPath)
+#                 outputData.append(flattenToMono(data))
+#                 outputSampleRates.append(samplerate)
+#     return outputData, outputSampleRates
 
 
 def main():
@@ -82,5 +86,15 @@ def main():
           str(float(score) / validation_length * 100))
 
 
+def loadPydubFile():
+    path = './data/comstar/XC384314.mp3'
+    data = AudioSegment.from_mp3(path)
+    play(data)
+    # plt.plot(data)
+    # plt.show()
+
+
+
 if __name__ == "__main__":
-    main()
+    # main()
+    loadPydubFile()
